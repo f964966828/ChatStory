@@ -60,13 +60,20 @@ function buildDemoMessages(nameA: string, nameB: string): ChatMessage[] {
 
 function messageBody(
   message: ChatMessage,
-  labels: { stickers: string; photos: string; videos: string },
+  labels: {
+    stickers: string;
+    photos: string;
+    videos: string;
+    system: string;
+  },
 ) {
   if (message.type === "sticker") return `[ ${labels.stickers} ]`;
   if (message.type === "image") return `[ ${labels.photos} ]`;
   if (message.type === "video") return `[ ${labels.videos} ]`;
-  if (message.type === "other") {
-    return message.content ? `[ ${message.content} ]` : "";
+  if (message.type === "system") {
+    return message.content
+      ? `[ ${labels.system} ] ${message.content}`
+      : `[ ${labels.system} ]`;
   }
   if (message.type === "call") return `☎ ${message.content}`;
   return message.content;
@@ -132,6 +139,7 @@ export function ChatSidePanel({
     stickers: t("personStickers"),
     photos: t("personPhotos"),
     videos: t("personVideos"),
+    system: t("chatSystem"),
   };
   const lastSortedRef = useRef<ChatMessage[]>(EMPTY_MESSAGES);
   const sorted = useMemo(() => {
@@ -567,7 +575,7 @@ export function ChatSidePanel({
               const isSelf = message.senderName === usernameA;
               const body = messageBody(message, labels);
               const previewHref =
-                message.type === "text" || message.type === "other"
+                message.type === "text"
                   ? firstHttpsUrl(message.content)
                   : null;
               const urlOnly =

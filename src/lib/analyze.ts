@@ -48,7 +48,7 @@ function extractEmojis(text: string) {
 }
 
 function countable(message: ChatMessage) {
-  return message.type !== "other";
+  return message.type !== "system";
 }
 
 /** Quiet this long, and the next message starts a new conversation. */

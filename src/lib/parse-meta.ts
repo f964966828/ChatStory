@@ -132,7 +132,7 @@ function metaMessageTypes(
   item: MetaRawMessage,
 ): ParsedChat["messages"][number]["type"][] {
   const content = decodeMetaText(messageContent(item)).trim();
-  if (isOtherNotice(content)) return ["other"];
+  if (isSystemNotice(content)) return ["system"];
   if (isCallNotice(content) || callDurationMs(item) != null) return ["call"];
   if (item.sticker || isGifShare(item)) return ["sticker"];
   const mediaTypes: ParsedChat["messages"][number]["type"][] = [
@@ -143,7 +143,7 @@ function metaMessageTypes(
       () => "video" as const,
     ),
   ];
-  const hasText = Boolean(content) && !isOtherNotice(content);
+  const hasText = Boolean(content) && !isSystemNotice(content);
   if (mediaTypes.length > 0) {
     return hasText ? ["text", ...mediaTypes] : mediaTypes;
   }
@@ -167,7 +167,7 @@ function shareLink(item: MetaRawMessage) {
   return typeof link === "string" ? link.trim() : "";
 }
 
-function isOtherNotice(content: string) {
+function isSystemNotice(content: string) {
   const text = normalizeNotice(content);
   return (
     /傳送了\s*\d+\s*[個份]附件$/u.test(text) ||

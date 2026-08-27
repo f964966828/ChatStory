@@ -295,12 +295,12 @@ describe("parseMetaChat", () => {
     });
   });
 
-  it("treats attachment placeholders as other", () => {
+  it("treats attachment placeholders as system", () => {
     const chat = parseMetaChat(RAW_META_ATTACHMENT_PLACEHOLDER);
 
     expect(chat.messages).toHaveLength(1);
     expect(chat.messages[0]).toMatchObject({
-      type: "other",
+      type: "system",
       content: "Instagram 用戶傳送了 1 份附件。",
       senderName: "userB",
     });
@@ -322,17 +322,17 @@ describe("parseMetaChat", () => {
     });
   });
 
-  it("treats reactions and started-call notices as other", () => {
+  it("treats reactions and started-call notices as system", () => {
     const chat = parseMetaChat(RAW_META_SYSTEM_NOTICES);
 
     expect(chat.messages).toHaveLength(6);
     expect(chat.messages[0]).toMatchObject({
-      type: "other",
+      type: "system",
       content: "Reacted 😡 to your message ",
       senderName: "userB",
     });
     expect(chat.messages[1]).toMatchObject({
-      type: "other",
+      type: "system",
       content: "You started an audio call",
       senderName: "userA",
     });
@@ -343,34 +343,34 @@ describe("parseMetaChat", () => {
       callDurationMs: 0,
     });
     expect(chat.messages[3]).toMatchObject({
-      type: "other",
+      type: "system",
       content: "You changed the theme to Non-Binary",
       senderName: "userA",
     });
     expect(chat.messages[4]).toMatchObject({
-      type: "other",
+      type: "system",
       content: "Liked a message",
       senderName: "userB",
     });
     expect(chat.messages[5]).toMatchObject({
-      type: "other",
+      type: "system",
       content: "userB started an audio call",
       senderName: "userB",
     });
   });
 
-  it("treats Messenger Chinese system notices as other", () => {
+  it("treats Messenger Chinese system notices as system", () => {
     const chat = parseMetaChat(RAW_META_MESSENGER_NOTICES);
 
     expect(chat.messages.map((message) => message.type)).toEqual([
-      "other",
-      "other",
-      "other",
-      "other",
-      "other",
-      "other",
-      "other",
-      "other",
+      "system",
+      "system",
+      "system",
+      "system",
+      "system",
+      "system",
+      "system",
+      "system",
     ]);
     expect(chat.messages.map((message) => message.content)).toEqual([
       "☎ 1 位 Messenger 用戶撥打了電話給你。",
