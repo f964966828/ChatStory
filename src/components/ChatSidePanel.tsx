@@ -65,6 +65,9 @@ function messageBody(
   if (message.type === "sticker") return `[ ${labels.stickers} ]`;
   if (message.type === "image") return `[ ${labels.photos} ]`;
   if (message.type === "video") return `[ ${labels.videos} ]`;
+  if (message.type === "other") {
+    return message.content ? `[ ${message.content} ]` : "";
+  }
   if (message.type === "call") return `☎ ${message.content}`;
   return message.content;
 }

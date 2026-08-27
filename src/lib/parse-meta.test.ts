@@ -93,6 +93,44 @@ const RAW_META_SHARE_LINK = `{
   ]
 }`;
 
+const RAW_META_ATTACHMENT_PLACEHOLDER = `{
+  "participants": [
+    { "name": "Alex" },
+    { "name": "Blake" }
+  ],
+  "messages": [
+    {
+      "sender_name": "Blake",
+      "timestamp_ms": 1700000004000,
+      "content": "Instagram 用戶傳送了 1 份附件。",
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false
+    }
+  ]
+}`;
+
+const RAW_META_CONTENT_AND_PHOTO = `{
+  "participants": [
+    { "name": "Alex" },
+    { "name": "Blake" }
+  ],
+  "messages": [
+    {
+      "sender_name": "Alex",
+      "timestamp_ms": 1700000005000,
+      "content": "look at this",
+      "photos": [
+        {
+          "uri": "your_instagram_activity/messages/inbox/fakeuser_000/photos/444.jpg",
+          "creation_timestamp": 1700000005
+        }
+      ],
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false
+    }
+  ]
+}`;
+
 describe("parseMetaChat", () => {
   it("treats a shared .gif as a sticker", () => {
     const chat = parseMetaChat(RAW_META_GIF_SHARE);
@@ -145,6 +183,33 @@ describe("parseMetaChat", () => {
       type: "text",
       content: "https://www.instagram.com/reel/fakeid/",
       senderName: "Blake",
+    });
+  });
+
+  it("treats attachment placeholders as other", () => {
+    const chat = parseMetaChat(RAW_META_ATTACHMENT_PLACEHOLDER);
+
+    expect(chat.messages).toHaveLength(1);
+    expect(chat.messages[0]).toMatchObject({
+      type: "other",
+      content: "Instagram 用戶傳送了 1 份附件。",
+      senderName: "Blake",
+    });
+  });
+
+  it("keeps caption text and the photo as separate messages", () => {
+    const chat = parseMetaChat(RAW_META_CONTENT_AND_PHOTO);
+
+    expect(chat.messages).toHaveLength(2);
+    expect(chat.messages[0]).toMatchObject({
+      type: "text",
+      content: "look at this",
+      senderName: "Alex",
+    });
+    expect(chat.messages[1]).toMatchObject({
+      type: "image",
+      content: "",
+      senderName: "Alex",
     });
   });
 });

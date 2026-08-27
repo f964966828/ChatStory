@@ -71,7 +71,9 @@ export function parseMetaChat(text: string): ParsedChat {
     if (!senderName) continue;
     const durationMs = callDurationMs(item);
     const types = metaMessageTypes(item);
+    const rawContent = decodeMetaText(messageContent(item));
     for (let part = 0; part < types.length; part += 1) {
+      const type = types[part];
       messages.push({
         id:
           types.length === 1
@@ -80,9 +82,9 @@ export function parseMetaChat(text: string): ParsedChat {
         timestamp: item.timestamp_ms,
         senderId: senderName,
         senderName,
-        content: decodeMetaText(messageContent(item)),
+        content: type === "image" || type === "video" ? "" : rawContent,
         platform: "meta",
-        type: types[part],
+        type,
         ...(durationMs == null ? {} : { callDurationMs: durationMs }),
       });
     }
@@ -129,7 +131,7 @@ function metaMessageTypes(
 ): ParsedChat["messages"][number]["type"][] {
   if (callDurationMs(item) != null) return ["call"];
   if (item.sticker || isGifShare(item)) return ["sticker"];
-  const types: ParsedChat["messages"][number]["type"][] = [
+  const mediaTypes: ParsedChat["messages"][number]["type"][] = [
     ...Array.from({ length: mediaCount(item.photos) }, () => "image" as const),
     ...Array.from({ length: mediaCount(item.videos) }, () => "video" as const),
     ...Array.from(
@@ -137,9 +139,14 @@ function metaMessageTypes(
       () => "video" as const,
     ),
   ];
-  if (types.length > 0) return types;
-  if (decodeMetaText(messageContent(item)).trim()) return ["text"];
-  return ["other"];
+  const content = decodeMetaText(messageContent(item)).trim();
+  const hasText = Boolean(content) && !isAttachmentPlaceholder(content);
+  if (mediaTypes.length > 0) {
+    return hasText ? ["text", ...mediaTypes] : mediaTypes;
+  }
+  if (!content) return ["other"];
+  if (isAttachmentPlaceholder(content)) return ["other"];
+  return ["text"];
 }
 
 function mediaCount(value: unknown) {
@@ -156,6 +163,14 @@ function shareLink(item: MetaRawMessage) {
   }
   const link = (item.share as { link?: unknown }).link;
   return typeof link === "string" ? link.trim() : "";
+}
+
+function isAttachmentPlaceholder(content: string) {
+  const text = content.trim().replace(/[。．.]+$/u, "");
+  return (
+    /傳送了\s*\d+\s*[個份]附件$/u.test(text) ||
+    /sent\s+(an|\d+)\s+attachments?$/i.test(text)
+  );
 }
 
 function isGifShare(item: MetaRawMessage) {
