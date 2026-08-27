@@ -10,6 +10,11 @@ type MetaRawMessage = {
   sender_name: string;
   timestamp_ms: number;
   content?: string;
+  sticker?: unknown;
+  photos?: unknown;
+  videos?: unknown;
+  call_duration?: unknown;
+  share?: unknown;
 };
 
 export function decodeMetaText(value: string) {
@@ -63,6 +68,7 @@ export function parseMetaChat(text: string): ParsedChat {
     if (!isMetaRawMessage(item)) continue;
     const senderName = decodeMetaText(item.sender_name).trim();
     if (!senderName) continue;
+    const durationMs = callDurationMs(item);
     messages.push({
       id: `meta-${index + 1}`,
       timestamp: item.timestamp_ms,
@@ -70,7 +76,8 @@ export function parseMetaChat(text: string): ParsedChat {
       senderName,
       content: decodeMetaText(item.content ?? ""),
       platform: "meta",
-      type: "text",
+      type: metaMessageType(item),
+      ...(durationMs == null ? {} : { callDurationMs: durationMs }),
     });
   }
 
@@ -108,6 +115,33 @@ export function parseMetaChat(text: string): ParsedChat {
     usernameA,
     usernameB,
   };
+}
+
+function metaMessageType(
+  item: MetaRawMessage,
+): ParsedChat["messages"][number]["type"] {
+  if (callDurationMs(item) != null) return "call";
+  if (item.sticker || isGifShare(item)) return "sticker";
+  if (Array.isArray(item.photos) && item.photos.length > 0) return "image";
+  if (Array.isArray(item.videos) && item.videos.length > 0) return "video";
+  if (decodeMetaText(item.content ?? "").trim()) return "text";
+  return "other";
+}
+
+function isGifShare(item: MetaRawMessage) {
+  if (!item.share || typeof item.share !== "object" || Array.isArray(item.share)) {
+    return false;
+  }
+  const link = (item.share as { link?: unknown }).link;
+  if (typeof link !== "string") return false;
+  return link.split(/[?#]/, 1)[0].toLowerCase().endsWith(".gif");
+}
+
+function callDurationMs(item: MetaRawMessage) {
+  if (typeof item.call_duration !== "number" || !Number.isFinite(item.call_duration)) {
+    return null;
+  }
+  return item.call_duration * 1000;
 }
 
 function isMetaRawMessage(value: unknown): value is MetaRawMessage {
