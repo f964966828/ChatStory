@@ -140,7 +140,7 @@ export function analyzeChat(messages: ChatMessage[]): ChatAnalysis {
   const replyTimes = new Map<string, { totalMs: number; count: number }>();
   let lastTs = Number.NEGATIVE_INFINITY;
   let previousMessage: ChatMessage | null = null;
-  const chronological = [...source].sort((a, b) => a.timestamp - b.timestamp);
+  const chronological = [...messages].sort((a, b) => a.timestamp - b.timestamp);
   for (const message of chronological) {
     const startsSession =
       lastTs === Number.NEGATIVE_INFINITY ||
