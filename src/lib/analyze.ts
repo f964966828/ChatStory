@@ -48,7 +48,7 @@ function extractEmojis(text: string) {
 }
 
 function countable(message: ChatMessage) {
-  return message.type !== "other";
+  return message.type !== "system";
 }
 
 /** Quiet this long, and the next message starts a new conversation. */
@@ -115,16 +115,20 @@ export function analyzeChat(messages: ChatMessage[]): ChatAnalysis {
       stats.textCount += 1;
       stats.textChars += message.content.length;
     }
-    if (message.type === "call") callCount += 1;
-    if (message.callDurationMs) {
-      callDurationMs += message.callDurationMs;
-      callByDay.set(dk, (callByDay.get(dk) ?? 0) + message.callDurationMs);
-    }
     senderMap.set(message.senderName, stats);
     chars += message.content.length;
     for (const emoji of extractEmojis(message.content)) {
       emojiMap.set(emoji, (emojiMap.get(emoji) ?? 0) + 1);
     }
+  }
+
+  for (const message of messages) {
+    if (message.type !== "call" && message.callDurationMs == null) continue;
+    callCount += 1;
+    if (!message.callDurationMs) continue;
+    callDurationMs += message.callDurationMs;
+    const dk = dateKey(message.timestamp);
+    callByDay.set(dk, (callByDay.get(dk) ?? 0) + message.callDurationMs);
   }
 
   const pairTotal = [...senderMap.entries()]
@@ -140,7 +144,7 @@ export function analyzeChat(messages: ChatMessage[]): ChatAnalysis {
   const replyTimes = new Map<string, { totalMs: number; count: number }>();
   let lastTs = Number.NEGATIVE_INFINITY;
   let previousMessage: ChatMessage | null = null;
-  const chronological = [...source].sort((a, b) => a.timestamp - b.timestamp);
+  const chronological = [...messages].sort((a, b) => a.timestamp - b.timestamp);
   for (const message of chronological) {
     const startsSession =
       lastTs === Number.NEGATIVE_INFINITY ||

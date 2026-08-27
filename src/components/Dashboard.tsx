@@ -525,11 +525,11 @@ export function Dashboard() {
           />
           <div className="-mx-2.5 sm:-mx-3">
             <WordCloud
-              key={`${deferredId}:a`}
-              cacheKey={`${deferredId}:a`}
+              key={`${deferredId}:a:${displayBoard?.usernameA ?? ""}`}
+              cacheKey={`${deferredId}:a:${displayBoard?.usernameA ?? ""}`}
               words={people[0]?.words ?? []}
               messages={analysis ? (displayBoard?.messages ?? []) : []}
-              senderName={data.senders[0]?.name ?? null}
+              senderName={displayBoard?.usernameA ?? null}
               autoload={!analysis}
             />
           </div>
@@ -543,11 +543,11 @@ export function Dashboard() {
           />
           <div className="-mx-2.5 sm:-mx-3">
             <WordCloud
-              key={`${deferredId}:b`}
-              cacheKey={`${deferredId}:b`}
+              key={`${deferredId}:b:${displayBoard?.usernameB ?? ""}`}
+              cacheKey={`${deferredId}:b:${displayBoard?.usernameB ?? ""}`}
               words={people[1]?.words ?? []}
               messages={analysis ? (displayBoard?.messages ?? []) : []}
-              senderName={data.senders[1]?.name ?? null}
+              senderName={displayBoard?.usernameB ?? null}
               autoload={!analysis}
             />
           </div>

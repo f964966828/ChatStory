@@ -6,7 +6,7 @@ export type MessageType =
   | "image"
   | "video"
   | "call"
-  | "other";
+  | "system";
 
 export type ChatMessage = {
   id: string;
