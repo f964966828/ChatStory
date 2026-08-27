@@ -165,9 +165,12 @@ function resetExportHeatmap(root: HTMLElement) {
     element.style.setProperty("border-radius", "9999px", "important");
     element.style.setProperty("box-shadow", "none", "important");
     element.style.setProperty("transform", "none", "important");
+    element.style.setProperty("white-space", "nowrap", "important");
+    element.style.setProperty("flex-shrink", "0", "important");
     const [label, value] = element.querySelectorAll("span");
     if (label instanceof HTMLElement) {
       label.style.setProperty("color", "#8b7aa3", "important");
+      label.style.setProperty("white-space", "nowrap", "important");
     }
     if (value instanceof HTMLElement) {
       value.style.setProperty("color", "#7c5cbf", "important");

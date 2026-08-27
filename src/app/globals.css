@@ -146,6 +146,8 @@ button:disabled {
   border-radius: 9999px !important;
   box-shadow: none !important;
   transform: none !important;
+  white-space: nowrap !important;
+  flex-shrink: 0 !important;
 }
 
 [data-export-static] [data-initiative-card] {

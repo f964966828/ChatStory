@@ -123,7 +123,7 @@ export function Heatmap({
         <h2 className="mr-auto shrink-0 whitespace-nowrap text-base font-bold sm:text-lg">
           {title}
         </h2>
-        <div className="order-3 flex w-full justify-center gap-2 sm:order-2 sm:w-auto">
+        <div className="order-3 flex w-full shrink-0 justify-center gap-2 sm:order-2 sm:w-auto">
           <button
             type="button"
             data-heatmap-stat=""
@@ -135,7 +135,7 @@ export function Heatmap({
                 current === "active" ? null : "active",
               );
             }}
-            className={`flex appearance-none items-baseline gap-2 rounded-full border px-3 py-1 text-sm transition sm:px-3.5 sm:py-1.5 sm:text-base ${
+            className={`flex shrink-0 appearance-none items-baseline gap-2 whitespace-nowrap rounded-full border px-3 py-1 text-sm transition sm:px-3.5 sm:py-1.5 sm:text-base ${
               selectedStat === "active"
                 ? "border-accent bg-accent/15"
                 : "border-card-border bg-white hover:border-accent"
@@ -163,7 +163,7 @@ export function Heatmap({
                 current === "streak" ? null : "streak",
               );
             }}
-            className={`flex appearance-none items-baseline gap-2 rounded-full border px-3 py-1 text-sm transition sm:px-3.5 sm:py-1.5 sm:text-base ${
+            className={`flex shrink-0 appearance-none items-baseline gap-2 whitespace-nowrap rounded-full border px-3 py-1 text-sm transition sm:px-3.5 sm:py-1.5 sm:text-base ${
               selectedStat === "streak"
                 ? "border-accent bg-accent/15"
                 : "border-card-border bg-white hover:border-accent"
