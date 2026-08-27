@@ -13,6 +13,7 @@ type MetaRawMessage = {
   sticker?: unknown;
   photos?: unknown;
   videos?: unknown;
+  audio_files?: unknown;
   call_duration?: unknown;
   share?: unknown;
 };
@@ -69,16 +70,22 @@ export function parseMetaChat(text: string): ParsedChat {
     const senderName = decodeMetaText(item.sender_name).trim();
     if (!senderName) continue;
     const durationMs = callDurationMs(item);
-    messages.push({
-      id: `meta-${index + 1}`,
-      timestamp: item.timestamp_ms,
-      senderId: senderName,
-      senderName,
-      content: decodeMetaText(item.content ?? ""),
-      platform: "meta",
-      type: metaMessageType(item),
-      ...(durationMs == null ? {} : { callDurationMs: durationMs }),
-    });
+    const types = metaMessageTypes(item);
+    for (let part = 0; part < types.length; part += 1) {
+      messages.push({
+        id:
+          types.length === 1
+            ? `meta-${index + 1}`
+            : `meta-${index + 1}-${part + 1}`,
+        timestamp: item.timestamp_ms,
+        senderId: senderName,
+        senderName,
+        content: decodeMetaText(messageContent(item)),
+        platform: "meta",
+        type: types[part],
+        ...(durationMs == null ? {} : { callDurationMs: durationMs }),
+      });
+    }
   }
 
   const namedParticipants = [
@@ -117,24 +124,43 @@ export function parseMetaChat(text: string): ParsedChat {
   };
 }
 
-function metaMessageType(
+function metaMessageTypes(
   item: MetaRawMessage,
-): ParsedChat["messages"][number]["type"] {
-  if (callDurationMs(item) != null) return "call";
-  if (item.sticker || isGifShare(item)) return "sticker";
-  if (Array.isArray(item.photos) && item.photos.length > 0) return "image";
-  if (Array.isArray(item.videos) && item.videos.length > 0) return "video";
-  if (decodeMetaText(item.content ?? "").trim()) return "text";
-  return "other";
+): ParsedChat["messages"][number]["type"][] {
+  if (callDurationMs(item) != null) return ["call"];
+  if (item.sticker || isGifShare(item)) return ["sticker"];
+  const types: ParsedChat["messages"][number]["type"][] = [
+    ...Array.from({ length: mediaCount(item.photos) }, () => "image" as const),
+    ...Array.from({ length: mediaCount(item.videos) }, () => "video" as const),
+    ...Array.from(
+      { length: mediaCount(item.audio_files) },
+      () => "video" as const,
+    ),
+  ];
+  if (types.length > 0) return types;
+  if (decodeMetaText(messageContent(item)).trim()) return ["text"];
+  return ["other"];
+}
+
+function mediaCount(value: unknown) {
+  return Array.isArray(value) ? value.length : 0;
+}
+
+function messageContent(item: MetaRawMessage) {
+  return shareLink(item) || item.content || "";
+}
+
+function shareLink(item: MetaRawMessage) {
+  if (!item.share || typeof item.share !== "object" || Array.isArray(item.share)) {
+    return "";
+  }
+  const link = (item.share as { link?: unknown }).link;
+  return typeof link === "string" ? link.trim() : "";
 }
 
 function isGifShare(item: MetaRawMessage) {
-  if (!item.share || typeof item.share !== "object" || Array.isArray(item.share)) {
-    return false;
-  }
-  const link = (item.share as { link?: unknown }).link;
-  if (typeof link !== "string") return false;
-  return link.split(/[?#]/, 1)[0].toLowerCase().endsWith(".gif");
+  const link = shareLink(item);
+  return Boolean(link) && link.split(/[?#]/, 1)[0].toLowerCase().endsWith(".gif");
 }
 
 function callDurationMs(item: MetaRawMessage) {
