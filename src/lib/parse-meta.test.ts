@@ -166,6 +166,26 @@ const RAW_META_SYSTEM_NOTICES = `{
   ]
 }`;
 
+const RAW_META_EMPTY_SHELL = `{
+  "participants": [
+    { "name": "userA" },
+    { "name": "userB" }
+  ],
+  "messages": [
+    {
+      "sender_name": "userA",
+      "timestamp_ms": 1700000011000,
+      "content": "hello"
+    },
+    {
+      "sender_name": "userB",
+      "timestamp_ms": 1700000012000,
+      "is_geoblocked_for_viewer": false,
+      "is_unsent_image_by_messenger_kid_parent": false
+    }
+  ]
+}`;
+
 describe("parseMetaChat", () => {
   it("treats a shared .gif as a sticker", () => {
     const chat = parseMetaChat(RAW_META_GIF_SHARE);
@@ -277,6 +297,17 @@ describe("parseMetaChat", () => {
       type: "other",
       content: "Liked a message",
       senderName: "userB",
+    });
+  });
+
+  it("drops empty shell messages", () => {
+    const chat = parseMetaChat(RAW_META_EMPTY_SHELL);
+
+    expect(chat.messages).toHaveLength(1);
+    expect(chat.messages[0]).toMatchObject({
+      type: "text",
+      content: "hello",
+      senderName: "userA",
     });
   });
 });

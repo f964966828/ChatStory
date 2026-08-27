@@ -147,7 +147,7 @@ function metaMessageTypes(
   if (mediaTypes.length > 0) {
     return hasText ? ["text", ...mediaTypes] : mediaTypes;
   }
-  if (!content) return ["other"];
+  if (!content) return [];
   return ["text"];
 }
 
