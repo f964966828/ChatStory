@@ -3,12 +3,12 @@ import { parseMetaChat } from "./parse-meta";
 
 const RAW_META_GIF_SHARE = `{
   "participants": [
-    { "name": "Alex" },
-    { "name": "Blake" }
+    { "name": "userA" },
+    { "name": "userB" }
   ],
   "messages": [
     {
-      "sender_name": "Alex",
+      "sender_name": "userA",
       "timestamp_ms": 1700000000000,
       "share": {
         "link": "https://media.example.com/media/fake-id/200.gif",
@@ -22,12 +22,12 @@ const RAW_META_GIF_SHARE = `{
 
 const RAW_META_AUDIO_FILE = `{
   "participants": [
-    { "name": "Alex" },
-    { "name": "Blake" }
+    { "name": "userA" },
+    { "name": "userB" }
   ],
   "messages": [
     {
-      "sender_name": "Alex",
+      "sender_name": "userA",
       "timestamp_ms": 1700000001000,
       "audio_files": [
         {
@@ -43,12 +43,12 @@ const RAW_META_AUDIO_FILE = `{
 
 const RAW_META_PHOTOS_AND_VIDEO = `{
   "participants": [
-    { "name": "Alex" },
-    { "name": "Blake" }
+    { "name": "userA" },
+    { "name": "userB" }
   ],
   "messages": [
     {
-      "sender_name": "Blake",
+      "sender_name": "userB",
       "timestamp_ms": 1700000002000,
       "photos": [
         {
@@ -74,12 +74,12 @@ const RAW_META_PHOTOS_AND_VIDEO = `{
 
 const RAW_META_SHARE_LINK = `{
   "participants": [
-    { "name": "Alex" },
-    { "name": "Blake" }
+    { "name": "userA" },
+    { "name": "userB" }
   ],
   "messages": [
     {
-      "sender_name": "Blake",
+      "sender_name": "userB",
       "timestamp_ms": 1700000003000,
       "content": "sent 1 attachment.",
       "share": {
@@ -95,12 +95,12 @@ const RAW_META_SHARE_LINK = `{
 
 const RAW_META_ATTACHMENT_PLACEHOLDER = `{
   "participants": [
-    { "name": "Alex" },
-    { "name": "Blake" }
+    { "name": "userA" },
+    { "name": "userB" }
   ],
   "messages": [
     {
-      "sender_name": "Blake",
+      "sender_name": "userB",
       "timestamp_ms": 1700000004000,
       "content": "Instagram 用戶傳送了 1 份附件。",
       "is_geoblocked_for_viewer": false,
@@ -111,12 +111,12 @@ const RAW_META_ATTACHMENT_PLACEHOLDER = `{
 
 const RAW_META_CONTENT_AND_PHOTO = `{
   "participants": [
-    { "name": "Alex" },
-    { "name": "Blake" }
+    { "name": "userA" },
+    { "name": "userB" }
   ],
   "messages": [
     {
-      "sender_name": "Alex",
+      "sender_name": "userA",
       "timestamp_ms": 1700000005000,
       "content": "look at this",
       "photos": [
@@ -139,7 +139,7 @@ describe("parseMetaChat", () => {
     expect(chat.messages[0]).toMatchObject({
       type: "sticker",
       content: "https://media.example.com/media/fake-id/200.gif",
-      senderName: "Alex",
+      senderName: "userA",
     });
   });
 
@@ -150,7 +150,7 @@ describe("parseMetaChat", () => {
     expect(chat.messages[0]).toMatchObject({
       type: "video",
       content: "",
-      senderName: "Alex",
+      senderName: "userA",
     });
   });
 
@@ -166,12 +166,12 @@ describe("parseMetaChat", () => {
     expect(chat.messages[0]).toMatchObject({
       type: "image",
       content: "",
-      senderName: "Blake",
+      senderName: "userB",
     });
     expect(chat.messages[2]).toMatchObject({
       type: "video",
       content: "",
-      senderName: "Blake",
+      senderName: "userB",
     });
   });
 
@@ -182,7 +182,7 @@ describe("parseMetaChat", () => {
     expect(chat.messages[0]).toMatchObject({
       type: "text",
       content: "https://www.instagram.com/reel/fakeid/",
-      senderName: "Blake",
+      senderName: "userB",
     });
   });
 
@@ -193,7 +193,7 @@ describe("parseMetaChat", () => {
     expect(chat.messages[0]).toMatchObject({
       type: "other",
       content: "Instagram 用戶傳送了 1 份附件。",
-      senderName: "Blake",
+      senderName: "userB",
     });
   });
 
@@ -204,12 +204,12 @@ describe("parseMetaChat", () => {
     expect(chat.messages[0]).toMatchObject({
       type: "text",
       content: "look at this",
-      senderName: "Alex",
+      senderName: "userA",
     });
     expect(chat.messages[1]).toMatchObject({
       type: "image",
       content: "",
-      senderName: "Alex",
+      senderName: "userA",
     });
   });
 });
