@@ -131,6 +131,41 @@ const RAW_META_CONTENT_AND_PHOTO = `{
   ]
 }`;
 
+const RAW_META_SYSTEM_NOTICES = `{
+  "participants": [
+    { "name": "userA" },
+    { "name": "userB" }
+  ],
+  "messages": [
+    {
+      "sender_name": "userB",
+      "timestamp_ms": 1700000006000,
+      "content": "Reacted 😡 to your message "
+    },
+    {
+      "sender_name": "userA",
+      "timestamp_ms": 1700000007000,
+      "content": "You started an audio call"
+    },
+    {
+      "sender_name": "userA",
+      "timestamp_ms": 1700000008000,
+      "content": "Audio call ended",
+      "call_duration": 0
+    },
+    {
+      "sender_name": "userA",
+      "timestamp_ms": 1700000009000,
+      "content": "You changed the theme to Non-Binary"
+    },
+    {
+      "sender_name": "userB",
+      "timestamp_ms": 1700000010000,
+      "content": "Liked a message"
+    }
+  ]
+}`;
+
 describe("parseMetaChat", () => {
   it("treats a shared .gif as a sticker", () => {
     const chat = parseMetaChat(RAW_META_GIF_SHARE);
@@ -210,6 +245,38 @@ describe("parseMetaChat", () => {
       type: "image",
       content: "",
       senderName: "userA",
+    });
+  });
+
+  it("treats reactions and started-call notices as other", () => {
+    const chat = parseMetaChat(RAW_META_SYSTEM_NOTICES);
+
+    expect(chat.messages).toHaveLength(5);
+    expect(chat.messages[0]).toMatchObject({
+      type: "other",
+      content: "Reacted 😡 to your message ",
+      senderName: "userB",
+    });
+    expect(chat.messages[1]).toMatchObject({
+      type: "other",
+      content: "You started an audio call",
+      senderName: "userA",
+    });
+    expect(chat.messages[2]).toMatchObject({
+      type: "call",
+      content: "Audio call ended",
+      senderName: "userA",
+      callDurationMs: 0,
+    });
+    expect(chat.messages[3]).toMatchObject({
+      type: "other",
+      content: "You changed the theme to Non-Binary",
+      senderName: "userA",
+    });
+    expect(chat.messages[4]).toMatchObject({
+      type: "other",
+      content: "Liked a message",
+      senderName: "userB",
     });
   });
 });

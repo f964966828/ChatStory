@@ -85,7 +85,9 @@ export function parseMetaChat(text: string): ParsedChat {
         content: type === "image" || type === "video" ? "" : rawContent,
         platform: "meta",
         type,
-        ...(durationMs == null ? {} : { callDurationMs: durationMs }),
+        ...(type === "call" && durationMs != null
+          ? { callDurationMs: durationMs }
+          : {}),
       });
     }
   }
@@ -129,7 +131,9 @@ export function parseMetaChat(text: string): ParsedChat {
 function metaMessageTypes(
   item: MetaRawMessage,
 ): ParsedChat["messages"][number]["type"][] {
-  if (callDurationMs(item) != null) return ["call"];
+  const content = decodeMetaText(messageContent(item)).trim();
+  if (isOtherNotice(content)) return ["other"];
+  if (isCallNotice(content) || callDurationMs(item) != null) return ["call"];
   if (item.sticker || isGifShare(item)) return ["sticker"];
   const mediaTypes: ParsedChat["messages"][number]["type"][] = [
     ...Array.from({ length: mediaCount(item.photos) }, () => "image" as const),
@@ -139,13 +143,11 @@ function metaMessageTypes(
       () => "video" as const,
     ),
   ];
-  const content = decodeMetaText(messageContent(item)).trim();
-  const hasText = Boolean(content) && !isAttachmentPlaceholder(content);
+  const hasText = Boolean(content) && !isOtherNotice(content);
   if (mediaTypes.length > 0) {
     return hasText ? ["text", ...mediaTypes] : mediaTypes;
   }
   if (!content) return ["other"];
-  if (isAttachmentPlaceholder(content)) return ["other"];
   return ["text"];
 }
 
@@ -165,11 +167,27 @@ function shareLink(item: MetaRawMessage) {
   return typeof link === "string" ? link.trim() : "";
 }
 
-function isAttachmentPlaceholder(content: string) {
-  const text = content.trim().replace(/[。．.]+$/u, "");
+function isOtherNotice(content: string) {
+  const trimmed = content.trim();
+  const withoutPeriod = trimmed.replace(/[。．.]+$/u, "");
+  const withoutCallMark = trimmed.replace(/^[☎☎️]\s*/, "");
   return (
-    /傳送了\s*\d+\s*[個份]附件$/u.test(text) ||
-    /sent\s+(an|\d+)\s+attachments?$/i.test(text)
+    /傳送了\s*\d+\s*[個份]附件$/u.test(withoutPeriod) ||
+    /sent\s+(an|\d+)\s+attachments?$/i.test(withoutPeriod) ||
+    /^reacted\s+.+\s+to (your|their) message$/i.test(withoutCallMark) ||
+    /^you started an (audio|video) call$/i.test(withoutCallMark) ||
+    /開始了(語音|視訊)通話$/.test(withoutCallMark) ||
+    /^(you|a contact) changed the theme to .+$/i.test(withoutCallMark) ||
+    /^liked a message$/i.test(withoutCallMark) ||
+    /對你的訊息.*回應/.test(withoutCallMark)
+  );
+}
+
+function isCallNotice(content: string) {
+  const text = content.trim().replace(/^[☎☎️]\s*/, "");
+  return (
+    /^(audio|video) call ended$/i.test(text) ||
+    /(語音|視訊)通話(已)?結束$/.test(text)
   );
 }
 
