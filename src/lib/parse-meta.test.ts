@@ -337,7 +337,7 @@ describe("parseMetaChat", () => {
       senderName: "userA",
     });
     expect(chat.messages[2]).toMatchObject({
-      type: "call",
+      type: "system",
       content: "Audio call ended",
       senderName: "userA",
       callDurationMs: 0,
@@ -356,6 +356,30 @@ describe("parseMetaChat", () => {
       type: "system",
       content: "userB started an audio call",
       senderName: "userB",
+    });
+  });
+
+  it("keeps call_duration on Audio call ended system notices", () => {
+    const chat = parseMetaChat(
+      JSON.stringify({
+        participants: [{ name: "userA" }, { name: "userB" }],
+        messages: [
+          {
+            sender_name: "userA",
+            timestamp_ms: 1700000040000,
+            content: "Audio call ended",
+            call_duration: 45,
+          },
+        ],
+      }),
+    );
+
+    expect(chat.messages).toHaveLength(1);
+    expect(chat.messages[0]).toMatchObject({
+      type: "system",
+      content: "Audio call ended",
+      senderName: "userA",
+      callDurationMs: 45_000,
     });
   });
 
@@ -382,6 +406,54 @@ describe("parseMetaChat", () => {
       "已新增 5 個 Pride 文字特效",
       "1 位聯絡人將你的暱稱設為小名。",
     ]);
+  });
+
+  it("treats matching Chinese and English notices as system", () => {
+    const notices = [
+      "Instagram 用戶傳送了 1 份附件。",
+      "userB sent 1 attachment.",
+      "對你的訊息「」傳達了 😮 心情",
+      "對你的訊息做出了回應",
+      "Reacted 😡 to your message",
+      "你開始了語音通話",
+      "userB started a video call",
+      "☎ 1 位 Messenger 用戶撥打了電話給你。",
+      "1 Messenger user called you.",
+      "☎ 你錯過了 1 位 Messenger 用戶的來電。",
+      "You missed a call from 1 Messenger user.",
+      "☎ 你撥打了電話給。",
+      "You called.",
+      "You placed a call to userB.",
+      "☎ 視訊通話已結束。",
+      "The video chat ended.",
+      "Audio call ended",
+      "Video call ended",
+      "一位聯絡人已將主題變更為「彩虹驕傲」",
+      "You changed the theme to Non-Binary",
+      "喜歡了一則訊息",
+      "Liked a message",
+      "已新增 5 個 Pride 文字特效",
+      "You added 5 Pride text effects",
+      "1 位聯絡人將你的暱稱設為小名。",
+      "A contact set your nickname to Nickname.",
+    ];
+
+    for (const content of notices) {
+      const chat = parseMetaChat(
+        JSON.stringify({
+          participants: [{ name: "userA" }, { name: "userB" }],
+          messages: [
+            {
+              sender_name: "userB",
+              timestamp_ms: 1700000030000,
+              content,
+            },
+          ],
+        }),
+      );
+      expect(chat.messages, content).toHaveLength(1);
+      expect(chat.messages[0]?.type, content).toBe("system");
+    }
   });
 
   it("drops empty shell messages", () => {

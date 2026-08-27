@@ -5,6 +5,7 @@ import type { PointerEvent as ReactPointerEvent, ReactNode } from "react";
 import { LinkPreview } from "@/components/LinkPreview";
 import { SiteLogo } from "@/components/SiteLogo";
 import { useLocale } from "@/components/LocaleProvider";
+import { formatDuration } from "@/lib/analyze";
 import type { ChatMessage } from "@/lib/chat-types";
 import {
   firstHttpsUrl,
@@ -71,9 +72,11 @@ function messageBody(
   if (message.type === "image") return `[ ${labels.photos} ]`;
   if (message.type === "video") return `[ ${labels.videos} ]`;
   if (message.type === "system") {
-    return message.content
+    const body = message.content
       ? `[ ${labels.system} ] ${message.content}`
       : `[ ${labels.system} ]`;
+    if (message.callDurationMs == null) return body;
+    return `${body} (${formatDuration(message.callDurationMs)})`;
   }
   if (message.type === "call") return `☎ ${message.content}`;
   return message.content;

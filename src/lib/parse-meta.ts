@@ -85,9 +85,7 @@ export function parseMetaChat(text: string): ParsedChat {
         content: type === "image" || type === "video" ? "" : rawContent,
         platform: "meta",
         type,
-        ...(type === "call" && durationMs != null
-          ? { callDurationMs: durationMs }
-          : {}),
+        ...(durationMs != null ? { callDurationMs: durationMs } : {}),
       });
     }
   }
@@ -133,7 +131,7 @@ function metaMessageTypes(
 ): ParsedChat["messages"][number]["type"][] {
   const content = decodeMetaText(messageContent(item)).trim();
   if (isSystemNotice(content)) return ["system"];
-  if (isCallNotice(content) || callDurationMs(item) != null) return ["call"];
+  if (callDurationMs(item) != null) return ["call"];
   if (item.sticker || isGifShare(item)) return ["sticker"];
   const mediaTypes: ParsedChat["messages"][number]["type"][] = [
     ...Array.from({ length: mediaCount(item.photos) }, () => "image" as const),
@@ -167,31 +165,47 @@ function shareLink(item: MetaRawMessage) {
   return typeof link === "string" ? link.trim() : "";
 }
 
+const SYSTEM_NOTICE_PATTERNS = [
+  /傳送了\s*\d+\s*[個份]附件$/u,
+  /sent\s+(an|\d+)\s+attachments?$/i,
+
+  /對你的訊息.*回應/,
+  /對你的訊息.*傳達了/,
+  /^reacted\s+.+\s+to (your|their) message$/i,
+
+  /開始了(語音|視訊)通話$/,
+  /^.+ started an? (audio|video) call$/i,
+
+  /撥打了電話給/,
+  /\bcalled you$/i,
+
+  /錯過了.+來電/,
+  /^you missed\b.+\bcall/i,
+
+  /你撥打了電話給/,
+  /^you called(?:\s.*)?$/i,
+  /^you placed a call(?:\s.*)?$/i,
+
+  /(語音|視訊)通話已結束$/,
+  /^the (video|voice) chat ended$/i,
+  /^(audio|video) call ended$/i,
+
+  /主題變更為/,
+  /^.+ changed the theme to .+$/i,
+
+  /喜歡了一則訊息/,
+  /^liked a message$/i,
+
+  /已新增\s*\d+\s*個.+文字特效/,
+  /added\s+\d+\s+.+\s+text effects?$/i,
+
+  /將你的暱稱設為/,
+  /set your nickname to/i,
+];
+
 function isSystemNotice(content: string) {
   const text = normalizeNotice(content);
-  return (
-    /傳送了\s*\d+\s*[個份]附件$/u.test(text) ||
-    /sent\s+(an|\d+)\s+attachments?$/i.test(text) ||
-    /^reacted\s+.+\s+to (your|their) message$/i.test(text) ||
-    /^.+ started an (audio|video) call$/i.test(text) ||
-    /開始了(語音|視訊)通話$/.test(text) ||
-    /撥打了電話給/.test(text) ||
-    /錯過了.+來電/.test(text) ||
-    /你撥打了電話給/.test(text) ||
-    /(語音|視訊)通話已結束$/.test(text) ||
-    /^(you|a contact) changed the theme to .+$/i.test(text) ||
-    /主題變更為/.test(text) ||
-    /^liked a message$/i.test(text) ||
-    /對你的訊息.*回應/.test(text) ||
-    /對你的訊息.*傳達了/.test(text) ||
-    /已新增\s*\d+\s*個.+文字特效/.test(text) ||
-    /將你的暱稱設為/.test(text)
-  );
-}
-
-function isCallNotice(content: string) {
-  const text = normalizeNotice(content);
-  return /^(audio|video) call ended$/i.test(text);
+  return SYSTEM_NOTICE_PATTERNS.some((pattern) => pattern.test(text));
 }
 
 function normalizeNotice(content: string) {
