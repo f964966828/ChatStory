@@ -1,0 +1,178 @@
+@import "tailwindcss";
+
+:root {
+  --background: #f7f2fc;
+  --foreground: #4a3a63;
+  --muted: #8b7aa3;
+  --card: #ffffff;
+  --card-border: #e9dcf8;
+  --accent: #b794f6;
+  --accent-dim: #9b6fe8;
+  --accent-deep: #7c5cbf;
+  --pink: #f4b8d0;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-muted: var(--muted);
+  --color-card: var(--card);
+  --color-card-border: var(--card-border);
+  --color-accent: var(--accent);
+  --color-accent-dim: var(--accent-dim);
+  --color-accent-deep: var(--accent-deep);
+  --color-pink: var(--pink);
+  --font-sans: var(--font-nunito), var(--font-noto), "Microsoft JhengHei",
+    sans-serif;
+  --font-serif: var(--font-title), "Zen Maru Gothic", "Microsoft JhengHei",
+    sans-serif;
+}
+
+html,
+body {
+  background: var(--background);
+  color: var(--foreground);
+}
+
+body {
+  font-family: var(--font-sans);
+}
+
+::selection {
+  background: color-mix(in oklab, var(--accent) 40%, white);
+}
+
+button,
+[role="button"] {
+  cursor: pointer;
+}
+
+button:disabled {
+  cursor: not-allowed;
+}
+
+.time-range {
+  pointer-events: none;
+  height: 24px;
+  background: transparent;
+  appearance: none;
+  -webkit-appearance: none;
+}
+
+.time-range::-webkit-slider-runnable-track {
+  height: 4px;
+  background: transparent;
+}
+
+.time-range::-webkit-slider-thumb {
+  appearance: none;
+  -webkit-appearance: none;
+  pointer-events: auto;
+  height: 16px;
+  width: 16px;
+  margin-top: -6px;
+  border-radius: 999px;
+  border: 2px solid #fff;
+  background: var(--accent-deep);
+  box-shadow: 0 1px 4px rgb(124 92 191 / 35%);
+  cursor: pointer;
+}
+
+.time-range::-moz-range-track {
+  height: 4px;
+  background: transparent;
+  border: none;
+}
+
+.time-range::-moz-range-thumb {
+  pointer-events: auto;
+  height: 16px;
+  width: 16px;
+  border-radius: 999px;
+  border: 2px solid #fff;
+  background: var(--accent-deep);
+  box-shadow: 0 1px 4px rgb(124 92 191 / 35%);
+  cursor: pointer;
+}
+
+.card-cute {
+  border: 1px solid var(--card-border);
+  background: var(--card);
+  box-shadow: 0 8px 24px -12px rgb(155 111 232 / 28%);
+}
+
+.chat-scroll {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  touch-action: pan-x pan-y;
+}
+
+.chat-scroll::-webkit-scrollbar {
+  display: none;
+}
+
+[data-export-static] [data-initiative-card],
+[data-export-static] [data-stat-hover],
+[data-export-static] [data-chat-jump]:not([data-heatmap-day]),
+[data-export-static] .bg-card,
+[data-export-static] .bg-white,
+[data-export-static] [data-peak-chip],
+[data-export-static] [data-peak-chip] button {
+  background-color: #fefefe !important;
+  background-image: linear-gradient(#fefefe, #fefefe) !important;
+}
+
+[data-export-static] [data-heatmap-day] {
+  background-color: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+[data-export-static] [data-heatmap-month] {
+  appearance: none !important;
+  background-color: #b794f6 !important;
+  border: 0 !important;
+  border-radius: 9999px !important;
+  box-shadow: none !important;
+  color: #ffffff !important;
+  transform: none !important;
+}
+
+[data-export-static] [data-heatmap-stat] {
+  appearance: none !important;
+  background-color: #fefefe !important;
+  background-image: linear-gradient(#fefefe, #fefefe) !important;
+  border: 1px solid #e9dcf8 !important;
+  border-radius: 9999px !important;
+  box-shadow: none !important;
+  transform: none !important;
+}
+
+[data-export-static] [data-initiative-card] {
+  transform: none !important;
+  translate: none !important;
+  border-color: #e9dcf8 !important;
+  box-shadow: none !important;
+}
+
+[data-export-static] [data-initiative-loser] {
+  color: #8b7aa3 !important;
+}
+
+[data-export-static] [data-stat-hover] {
+  border-color: #e9dcf8 !important;
+}
+
+[data-export-static] [data-stat-hover-value] {
+  color: inherit !important;
+  transform: none !important;
+}
+
+[data-export-static] [data-stat-featured-value] {
+  color: #7c5cbf !important;
+}
+
+[data-export-static] [data-peak-rank] {
+  background-color: #7c5cbf !important;
+  color: #ffffff !important;
+}
