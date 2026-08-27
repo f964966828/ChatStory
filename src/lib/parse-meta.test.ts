@@ -162,6 +162,11 @@ const RAW_META_SYSTEM_NOTICES = `{
       "sender_name": "userB",
       "timestamp_ms": 1700000010000,
       "content": "Liked a message"
+    },
+    {
+      "sender_name": "userB",
+      "timestamp_ms": 1700000010500,
+      "content": "userB started an audio call"
     }
   ]
 }`;
@@ -271,7 +276,7 @@ describe("parseMetaChat", () => {
   it("treats reactions and started-call notices as other", () => {
     const chat = parseMetaChat(RAW_META_SYSTEM_NOTICES);
 
-    expect(chat.messages).toHaveLength(5);
+    expect(chat.messages).toHaveLength(6);
     expect(chat.messages[0]).toMatchObject({
       type: "other",
       content: "Reacted 😡 to your message ",
@@ -296,6 +301,11 @@ describe("parseMetaChat", () => {
     expect(chat.messages[4]).toMatchObject({
       type: "other",
       content: "Liked a message",
+      senderName: "userB",
+    });
+    expect(chat.messages[5]).toMatchObject({
+      type: "other",
+      content: "userB started an audio call",
       senderName: "userB",
     });
   });

@@ -175,7 +175,7 @@ function isOtherNotice(content: string) {
     /傳送了\s*\d+\s*[個份]附件$/u.test(withoutPeriod) ||
     /sent\s+(an|\d+)\s+attachments?$/i.test(withoutPeriod) ||
     /^reacted\s+.+\s+to (your|their) message$/i.test(withoutCallMark) ||
-    /^you started an (audio|video) call$/i.test(withoutCallMark) ||
+    /^.+ started an (audio|video) call$/i.test(withoutCallMark) ||
     /開始了(語音|視訊)通話$/.test(withoutCallMark) ||
     /^(you|a contact) changed the theme to .+$/i.test(withoutCallMark) ||
     /^liked a message$/i.test(withoutCallMark) ||
