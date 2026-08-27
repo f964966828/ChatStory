@@ -168,27 +168,37 @@ function shareLink(item: MetaRawMessage) {
 }
 
 function isOtherNotice(content: string) {
-  const trimmed = content.trim();
-  const withoutPeriod = trimmed.replace(/[。．.]+$/u, "");
-  const withoutCallMark = trimmed.replace(/^[☎☎️]\s*/, "");
+  const text = normalizeNotice(content);
   return (
-    /傳送了\s*\d+\s*[個份]附件$/u.test(withoutPeriod) ||
-    /sent\s+(an|\d+)\s+attachments?$/i.test(withoutPeriod) ||
-    /^reacted\s+.+\s+to (your|their) message$/i.test(withoutCallMark) ||
-    /^.+ started an (audio|video) call$/i.test(withoutCallMark) ||
-    /開始了(語音|視訊)通話$/.test(withoutCallMark) ||
-    /^(you|a contact) changed the theme to .+$/i.test(withoutCallMark) ||
-    /^liked a message$/i.test(withoutCallMark) ||
-    /對你的訊息.*回應/.test(withoutCallMark)
+    /傳送了\s*\d+\s*[個份]附件$/u.test(text) ||
+    /sent\s+(an|\d+)\s+attachments?$/i.test(text) ||
+    /^reacted\s+.+\s+to (your|their) message$/i.test(text) ||
+    /^.+ started an (audio|video) call$/i.test(text) ||
+    /開始了(語音|視訊)通話$/.test(text) ||
+    /撥打了電話給/.test(text) ||
+    /錯過了.+來電/.test(text) ||
+    /你撥打了電話給/.test(text) ||
+    /(語音|視訊)通話已結束$/.test(text) ||
+    /^(you|a contact) changed the theme to .+$/i.test(text) ||
+    /主題變更為/.test(text) ||
+    /^liked a message$/i.test(text) ||
+    /對你的訊息.*回應/.test(text) ||
+    /對你的訊息.*傳達了/.test(text) ||
+    /已新增\s*\d+\s*個.+文字特效/.test(text) ||
+    /將你的暱稱設為/.test(text)
   );
 }
 
 function isCallNotice(content: string) {
-  const text = content.trim().replace(/^[☎☎️]\s*/, "");
-  return (
-    /^(audio|video) call ended$/i.test(text) ||
-    /(語音|視訊)通話(已)?結束$/.test(text)
-  );
+  const text = normalizeNotice(content);
+  return /^(audio|video) call ended$/i.test(text);
+}
+
+function normalizeNotice(content: string) {
+  return content
+    .trim()
+    .replace(/^[☎☎️]\s*/, "")
+    .replace(/[。．.]+$/u, "");
 }
 
 function isGifShare(item: MetaRawMessage) {

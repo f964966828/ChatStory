@@ -191,6 +191,55 @@ const RAW_META_EMPTY_SHELL = `{
   ]
 }`;
 
+const RAW_META_MESSENGER_NOTICES = `{
+  "participants": [
+    { "name": "userA" },
+    { "name": "userB" }
+  ],
+  "messages": [
+    {
+      "sender_name": "userB",
+      "timestamp_ms": 1700000020000,
+      "content": "☎ 1 位 Messenger 用戶撥打了電話給你。"
+    },
+    {
+      "sender_name": "userA",
+      "timestamp_ms": 1700000021000,
+      "content": "☎ 你錯過了 1 位 Messenger 用戶的來電。"
+    },
+    {
+      "sender_name": "userA",
+      "timestamp_ms": 1700000022000,
+      "content": "☎ 你撥打了電話給。"
+    },
+    {
+      "sender_name": "userB",
+      "timestamp_ms": 1700000023000,
+      "content": "☎ 視訊通話已結束。"
+    },
+    {
+      "sender_name": "userB",
+      "timestamp_ms": 1700000024000,
+      "content": "對你的訊息「」傳達了 😮 心情"
+    },
+    {
+      "sender_name": "userB",
+      "timestamp_ms": 1700000025000,
+      "content": "一位聯絡人已將主題變更為「彩虹驕傲」"
+    },
+    {
+      "sender_name": "userA",
+      "timestamp_ms": 1700000026000,
+      "content": "已新增 5 個 Pride 文字特效"
+    },
+    {
+      "sender_name": "userB",
+      "timestamp_ms": 1700000027000,
+      "content": "1 位聯絡人將你的暱稱設為小名。"
+    }
+  ]
+}`;
+
 describe("parseMetaChat", () => {
   it("treats a shared .gif as a sticker", () => {
     const chat = parseMetaChat(RAW_META_GIF_SHARE);
@@ -308,6 +357,31 @@ describe("parseMetaChat", () => {
       content: "userB started an audio call",
       senderName: "userB",
     });
+  });
+
+  it("treats Messenger Chinese system notices as other", () => {
+    const chat = parseMetaChat(RAW_META_MESSENGER_NOTICES);
+
+    expect(chat.messages.map((message) => message.type)).toEqual([
+      "other",
+      "other",
+      "other",
+      "other",
+      "other",
+      "other",
+      "other",
+      "other",
+    ]);
+    expect(chat.messages.map((message) => message.content)).toEqual([
+      "☎ 1 位 Messenger 用戶撥打了電話給你。",
+      "☎ 你錯過了 1 位 Messenger 用戶的來電。",
+      "☎ 你撥打了電話給。",
+      "☎ 視訊通話已結束。",
+      "對你的訊息「」傳達了 😮 心情",
+      "一位聯絡人已將主題變更為「彩虹驕傲」",
+      "已新增 5 個 Pride 文字特效",
+      "1 位聯絡人將你的暱稱設為小名。",
+    ]);
   });
 
   it("drops empty shell messages", () => {
