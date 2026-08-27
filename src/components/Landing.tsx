@@ -1,8 +1,8 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { useChat } from "@/components/ChatProvider";
 import { ImportGuide } from "@/components/ImportGuide";
+import type { PendingImport } from "@/components/ImportReview";
 import { useLocale } from "@/components/LocaleProvider";
 import type { ImportPlatform } from "@/lib/chat-types";
 import { acceptForPlatform, importChatFile, isAllowedFileType } from "@/lib/import-chat";
@@ -11,12 +11,11 @@ import { SITE_LINKS } from "@/lib/site-links";
 
 type LandingProps = {
   onPreviewDashboard: () => void;
-  onImported: () => void;
+  onParsed: (pending: PendingImport) => void;
 };
 
-export function Landing({ onPreviewDashboard, onImported }: LandingProps) {
+export function Landing({ onPreviewDashboard, onParsed }: LandingProps) {
   const { t } = useLocale();
-  const { addImportedChat } = useChat();
   const [platform, setPlatform] = useState<ImportPlatform>("line");
   const [error, setError] = useState<MessageKey | null>(null);
   const [reading, setReading] = useState(false);
@@ -72,8 +71,7 @@ export function Landing({ onPreviewDashboard, onImported }: LandingProps) {
     setReading(true);
     try {
       const parsed = await importChatFile(file, platform);
-      addImportedChat(parsed, file.name, platform);
-      onImported();
+      onParsed({ parsed, fileName: file.name, platform });
     } catch (caught) {
       const code = caught instanceof Error ? caught.message : "";
       if (code === "FILE_TOO_LARGE") setError("uploadErrorLarge");
