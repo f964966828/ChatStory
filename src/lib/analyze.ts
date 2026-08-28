@@ -47,16 +47,11 @@ function extractEmojis(text: string) {
   return text.match(/\p{Extended_Pictographic}/gu) ?? [];
 }
 
-function countable(message: ChatMessage) {
-  return message.type !== "system";
-}
-
 /** Quiet this long, and the next message starts a new conversation. */
 const SESSION_GAP_MS = 8 * 60 * 60 * 1000;
 
 export function analyzeChat(messages: ChatMessage[]): ChatAnalysis {
-  const usable = messages.filter(countable);
-  const source = usable.length > 0 ? usable : messages;
+  const source = messages;
   const hourly = Array.from({ length: 24 }, () => 0);
   const weekday = Array.from({ length: 7 }, () => 0);
   const dailyBySender = new Map<string, Map<string, number>>();
