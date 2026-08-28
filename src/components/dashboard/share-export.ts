@@ -1,8 +1,39 @@
+import { toBlob } from "html-to-image";
 import { relayoutWordCloudBox } from "@/components/dashboard/WordCloud";
 import {
   EXPORT_WHITE,
   EXPORT_WHITE_FILL,
 } from "@/components/dashboard/export-idle";
+
+const FONT_WAIT_MS = 1500;
+const EXPORT_WAIT_MS = 20000;
+const MAX_CANVAS_SIDE = 8192;
+
+function waitUpTo(promise: Promise<unknown>, ms: number) {
+  return Promise.race([
+    promise.then(
+      () => undefined,
+      () => undefined,
+    ),
+    new Promise<void>((resolve) => setTimeout(resolve, ms)),
+  ]);
+}
+
+function withTimeout<T>(promise: Promise<T>, ms: number, message: string) {
+  return new Promise<T>((resolve, reject) => {
+    const timer = window.setTimeout(() => reject(new Error(message)), ms);
+    promise.then(
+      (value) => {
+        window.clearTimeout(timer);
+        resolve(value);
+      },
+      (error) => {
+        window.clearTimeout(timer);
+        reject(error);
+      },
+    );
+  });
+}
 
 function paintExportWhite(element: HTMLElement) {
   element.style.setProperty("background-color", EXPORT_WHITE, "important");
@@ -208,7 +239,7 @@ export async function createDesktopExportTarget(source: HTMLDivElement) {
   const iframe = document.createElement("iframe");
   iframe.setAttribute("aria-hidden", "true");
   iframe.style.cssText =
-    "position:fixed;left:-10000px;top:0;width:1280px;height:1px;border:0;pointer-events:none;";
+    "position:fixed;left:0;top:0;width:1280px;height:1px;opacity:0;border:0;pointer-events:none;z-index:-1;";
   document.body.appendChild(iframe);
 
   const frameDocument = iframe.contentDocument;
@@ -231,6 +262,12 @@ export async function createDesktopExportTarget(source: HTMLDivElement) {
   for (const styleNode of document.head.querySelectorAll(
     'style, link[rel="stylesheet"]',
   )) {
+    if (
+      styleNode.tagName === "STYLE" &&
+      (styleNode.textContent ?? "").includes("@font-face")
+    ) {
+      continue;
+    }
     const clone = styleNode.cloneNode(true) as HTMLElement;
     if (clone.tagName === "LINK") {
       const sourceLink = styleNode as HTMLLinkElement;
@@ -287,7 +324,7 @@ export async function createDesktopExportTarget(source: HTMLDivElement) {
   resetExportWordCloud(clone);
 
   await Promise.all(stylePromises);
-  await frameDocument.fonts.ready;
+  await waitUpTo(frameDocument.fonts.ready, FONT_WAIT_MS);
   await new Promise<void>((resolve) =>
     requestAnimationFrame(() => requestAnimationFrame(() => resolve())),
   );
@@ -303,4 +340,26 @@ export async function createDesktopExportTarget(source: HTMLDivElement) {
     node: clone,
     cleanup: () => iframe.remove(),
   };
+}
+
+export async function exportDashboardBlob(node: HTMLElement) {
+  const width = Math.ceil(node.scrollWidth);
+  const height = Math.ceil(node.scrollHeight);
+  const pixelRatio = Math.min(2, MAX_CANVAS_SIDE / Math.max(width, height, 1));
+  const blob = await withTimeout(
+    toBlob(node, {
+      backgroundColor: "#f7f2fc",
+      cacheBust: false,
+      skipFonts: true,
+      width,
+      height,
+      pixelRatio,
+      filter: (element) =>
+        element.getAttribute?.("data-export-ignore") !== "true",
+    }),
+    EXPORT_WAIT_MS,
+    "IMAGE_EXPORT_TIMEOUT",
+  );
+  if (!blob) throw new Error("IMAGE_EXPORT_FAILED");
+  return blob;
 }

@@ -1,7 +1,6 @@
 "use client";
 
 import { useDeferredValue, useEffect, useMemo, useRef, useState } from "react";
-import { toBlob } from "html-to-image";
 import { BrandMark } from "@/components/BrandMark";
 import { ChatSidePanel } from "@/components/ChatSidePanel";
 import { WordCloud } from "@/components/dashboard/WordCloud";
@@ -21,7 +20,10 @@ import { TimelineChart } from "@/components/dashboard/TimelineChart";
 import { WhoMorePie } from "@/components/dashboard/WhoMorePie";
 import { formatDayKey } from "@/components/dashboard/date-utils";
 import { EXPORT_IDLE_EVENT } from "@/components/dashboard/export-idle";
-import { createDesktopExportTarget } from "@/components/dashboard/share-export";
+import {
+  createDesktopExportTarget,
+  exportDashboardBlob,
+} from "@/components/dashboard/share-export";
 import {
   formatDuration,
   formatNumber,
@@ -233,25 +235,13 @@ export function Dashboard() {
       await new Promise<void>((resolve) =>
         requestAnimationFrame(() => requestAnimationFrame(() => resolve())),
       );
-      await document.fonts.ready;
       const exportTarget = await createDesktopExportTarget(dashboard);
-      const width = Math.ceil(exportTarget.node.scrollWidth);
-      const height = Math.ceil(exportTarget.node.scrollHeight);
-      let blob: Blob | null = null;
+      let blob: Blob;
       try {
-        blob = await toBlob(exportTarget.node, {
-          backgroundColor: "#f7f2fc",
-          cacheBust: true,
-          width,
-          height,
-          pixelRatio: 2,
-          filter: (node) =>
-            node.getAttribute?.("data-export-ignore") !== "true",
-        });
+        blob = await exportDashboardBlob(exportTarget.node);
       } finally {
         exportTarget.cleanup();
       }
-      if (!blob) throw new Error("IMAGE_EXPORT_FAILED");
 
       const file = new File([blob], "chatstory.png", { type: "image/png" });
       setSharePreview({ file, url: URL.createObjectURL(blob) });
