@@ -98,27 +98,36 @@ type LineDate = {
   day: number;
 };
 
-function parseLineDate(line: string): LineDate | null {
-  const zh = /^(\d{4})\/(\d{1,2})\/(\d{1,2})(?:[（(][^）)]*[）)])?$/.exec(
-    line,
-  );
-  if (zh) {
-    return {
-      year: Number(zh[1]),
-      month: Number(zh[2]),
-      day: Number(zh[3]),
-    };
-  }
+const LINE_EN_WEEKDAY =
+  "Sun(?:day)?|Mon(?:day)?|Tue(?:sday)?|Wed(?:nesday)?|Thu(?:rsday)?|Fri(?:day)?|Sat(?:urday)?";
+const LINE_WEEKDAY = `(?:[（(][^）)]*[）)]|(?:星期|週|礼拜|禮拜)[日一二三四五六天]|${LINE_EN_WEEKDAY})`;
 
-  const en =
-    /^(?:Sun|Mon|Tue|Wed|Thu|Fri|Sat),\s*(\d{1,2})\/(\d{1,2})\/(\d{4})$/i.exec(
-      line,
-    );
+function parseLineDate(line: string): LineDate | null {
+  const zh = new RegExp(
+    `^(\\d{4})/(\\d{1,2})/(\\d{1,2})(?:\\s*${LINE_WEEKDAY})?$`,
+    "i",
+  ).exec(line);
+  if (zh) return toLineDate(zh[1], zh[2], zh[3]);
+
+  const dotted = new RegExp(
+    `^(\\d{4})\\.\\s*(\\d{1,2})\\.\\s*(\\d{1,2})\\.?(?:\\s*${LINE_WEEKDAY})?$`,
+    "i",
+  ).exec(line);
+  if (dotted) return toLineDate(dotted[1], dotted[2], dotted[3]);
+
+  const en = new RegExp(
+    `^(?:${LINE_EN_WEEKDAY}),\\s*(\\d{1,2})/(\\d{1,2})/(\\d{4})$`,
+    "i",
+  ).exec(line);
   if (!en) return null;
+  return toLineDate(en[3], en[1], en[2]);
+}
+
+function toLineDate(year: string, month: string, day: string): LineDate {
   return {
-    year: Number(en[3]),
-    month: Number(en[1]),
-    day: Number(en[2]),
+    year: Number(year),
+    month: Number(month),
+    day: Number(day),
   };
 }
 
