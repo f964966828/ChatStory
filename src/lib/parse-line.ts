@@ -127,14 +127,21 @@ function parseLineTime(
 ): { hour: number; minute: number } | null {
   const zh = /^(上午|下午)\s*(\d{1,2}):(\d{2})$/.exec(value);
   const en = /^(\d{1,2}):(\d{2})\s*(AM|PM)$/i.exec(value);
-  if (!zh && !en) return null;
+  if (zh || en) {
+    const period = zh?.[1] ?? en?.[3].toUpperCase();
+    const rawHour = Number(zh?.[2] ?? en?.[1]);
+    const minute = Number(zh?.[3] ?? en?.[2]);
+    if (rawHour < 1 || rawHour > 12 || minute < 0 || minute > 59) return null;
+    const hour =
+      (rawHour % 12) + (period === "下午" || period === "PM" ? 12 : 0);
+    return { hour, minute };
+  }
 
-  const period = zh?.[1] ?? en?.[3].toUpperCase();
-  const rawHour = Number(zh?.[2] ?? en?.[1]);
-  const minute = Number(zh?.[3] ?? en?.[2]);
-  if (rawHour < 1 || rawHour > 12 || minute < 0 || minute > 59) return null;
-
-  const hour = (rawHour % 12) + (period === "下午" || period === "PM" ? 12 : 0);
+  const h24 = /^(\d{1,2}):(\d{2})(?::\d{2})?$/.exec(value);
+  if (!h24) return null;
+  const hour = Number(h24[1]);
+  const minute = Number(h24[2]);
+  if (hour < 0 || hour > 23 || minute < 0 || minute > 59) return null;
   return { hour, minute };
 }
 
