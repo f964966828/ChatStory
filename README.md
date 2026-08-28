@@ -80,3 +80,14 @@ npm run dev
 
 # Open localhost:3000 and you'll see
 ```
+
+## Contributing
+
+Pull requests are welcome.
+
+| Type | Start with | Notes |
+| --- | --- | --- |
+| Functionality issue | Issue or PR | A bug in import, charts, or display. PRs should say what broke and how you checked the fix. |
+| Typos and wording | Issue or PR | README, UI text, import guides, or Chinese / English phrasing. |
+| New feature | Issue first | New chart, group chats, another platform, or a large UI / data-flow change. Share a proposal on the issue. A pull request opened before discussion will not be approved. |
+ 
