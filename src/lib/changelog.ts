@@ -10,11 +10,13 @@ export const CHANGELOG: ChangelogEntry[] = [
   {
     date: "2026/08/28",
     zh: [
+      "修正 LINE 無法讀取 24 小時制聊天紀錄。",
       "實作 Meta json 檔 parser (支援中英文)。",
       "新增匯入檔案確認畫面。",
       "正式上線。",
     ],
     en: [
+      "Fixed LINE imports that use 24-hour timestamps.",
       "Added a Meta JSON file parser (Chinese and English).",
       "Added an import confirmation screen.",
       "Launched the site.",
