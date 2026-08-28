@@ -8,14 +8,25 @@ export const CHANGELOG_PAGE_SIZE = 5;
 
 export const CHANGELOG: ChangelogEntry[] = [
   {
-    date: "2026/08/26",
+    date: "2026/08/28",
     zh: [
       "實作 Meta json 檔 parser (支援中英文)。",
+      "新增匯入檔案確認畫面。",
+      "正式上線。",
+    ],
+    en: [
+      "Added a Meta JSON file parser (Chinese and English).",
+      "Added an import confirmation screen.",
+      "Launched the site.",
+    ],
+  },
+  {
+    date: "2026/08/26",
+    zh: [
       "新增 Meta 匯入指引。",
       "優化圖表互動。",
     ],
     en: [
-      "Added a Meta JSON file parser (Chinese and English).",
       "Added a Meta import guide.",
       "Improved chart interactions.",
     ],
