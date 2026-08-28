@@ -26,9 +26,27 @@ const titleFont = Zen_Maru_Gothic({
   preload: false,
 });
 
+const siteUrl =
+  process.env.GITHUB_PAGES === "true"
+    ? "https://f964966828.github.io"
+    : "http://localhost:3000";
+
 export const metadata: Metadata = {
+  metadataBase: new URL(siteUrl),
   title: "ChatStory",
-  description: "把聊天紀錄變成可愛的故事與數據",
+  description: "把聊天紀錄變成可以翻看的小故事",
+  openGraph: {
+    title: "ChatStory",
+    description: "把聊天紀錄變成可以翻看的小故事",
+    type: "website",
+    locale: "zh_TW",
+    siteName: "ChatStory",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "ChatStory",
+    description: "把聊天紀錄變成可以翻看的小故事",
+  },
 };
 
 export const viewport: Viewport = {
