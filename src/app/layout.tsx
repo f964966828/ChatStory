@@ -36,16 +36,12 @@ export const metadata: Metadata = {
   title: "ChatStory",
   description: "把聊天紀錄變成可以翻看的小故事",
   openGraph: {
-    title: "ChatStory",
-    description: "把聊天紀錄變成可以翻看的小故事",
     type: "website",
     locale: "zh_TW",
     siteName: "ChatStory",
   },
   twitter: {
     card: "summary_large_image",
-    title: "ChatStory",
-    description: "把聊天紀錄變成可以翻看的小故事",
   },
 };
 
