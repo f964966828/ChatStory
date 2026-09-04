@@ -8,6 +8,19 @@ export const CHANGELOG_PAGE_SIZE = 5;
 
 export const CHANGELOG: ChangelogEntry[] = [
   {
+    date: "2026/09/04",
+    zh: [
+      "修正 LINE 文字檔案解析錯誤問題。",
+      "修正儀表板分享會一直停在產生中的問題。",
+      "匯入指引改為回到首頁。",
+    ],
+    en: [
+      "Fixed LINE text-file parsing errors.",
+      "Fixed dashboard sharing getting stuck while generating the image.",
+      "Import guides now return to the homepage.",
+    ],
+  },
+  {
     date: "2026/08/28",
     zh: [
       "實作 Meta json 檔 parser (支援中英文)。",
