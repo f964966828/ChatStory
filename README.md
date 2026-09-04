@@ -39,6 +39,7 @@ Data flows in four stages: **file checks → platform parser → local analysis 
 | Shell | `src/components/` | Landing, dashboard layout, chat panel, i18n |
 | Charts | `src/components/dashboard/` | One file per visualization, plus share-image export |
 | Domain | `src/lib/` | Import, LINE/Meta parsers, stats, word tokenization |
+| Tests | `tests/` | Parser unit tests, kept out of `src/lib/` |
 
 ```
 src/
@@ -50,10 +51,11 @@ src/
 │   └── dashboard/        # Charts
 └── lib/
     ├── import-chat.ts    # Type / size checks
-    ├── parse-line.ts     # LINE .txt
-    ├── parse-meta.ts     # Meta .json
+    ├── parse/            # LINE .txt and Meta .json
     ├── analyze.ts        # Stats
     └── words.ts          # Word clouds
+tests/
+└── parse/                # LINE and Meta parser tests
 ```
 
 ## Deploy locally
@@ -81,13 +83,50 @@ npm run dev
 # Open localhost:3000 and you'll see
 ```
 
+### Test
+
+Parser tests live in `tests/parse/`. After `npm install`:
+
+```bash
+# Run all tests
+npm test
+
+# Run one file
+npx vitest run tests/parse/line.test.ts
+npx vitest run tests/parse/meta.test.ts
+```
+
 ## Contributing
 
 Pull requests are welcome.
 
-| Type | Start with | Notes |
-| --- | --- | --- |
-| Functionality issue | Issue or PR | A bug in import, charts, or display. PRs should say what broke and how you checked the fix. |
-| Typos and wording | Issue or PR | README, UI text, import guides, or Chinese / English phrasing. |
-| New feature | Issue first | New chart, group chats, another platform, or a large UI / data-flow change. Share a proposal on the issue. A pull request opened before discussion will not be approved. |
+<table>
+  <thead>
+    <tr>
+      <th nowrap>Type</th>
+      <th nowrap>Start with</th>
+      <th>Notes</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td nowrap>Functionality issue</td>
+      <td nowrap>Issue or PR</td>
+      <td>A bug in import, charts, or display. Say what broke and how you checked the fix.</td>
+    </tr>
+    <tr>
+      <td nowrap>Typos and wording</td>
+      <td nowrap>Issue or PR</td>
+      <td>README, UI text, import guides, or Chinese / English phrasing.</td>
+    </tr>
+    <tr>
+      <td nowrap>New feature</td>
+      <td nowrap>Issue first</td>
+      <td>New chart, group chats, another platform, or a large UI / data-flow change.</td>
+    </tr>
+  </tbody>
+</table>
+
+Share a proposal on the issue first. A pull request opened before discussion will not be approved.
+
  
