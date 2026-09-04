@@ -1,5 +1,5 @@
 import type { ImportPlatform, ParsedChat } from "@/lib/chat-types";
-import { parseChatText } from "@/lib/parsers";
+import { parseChatText } from "@/lib/parse";
 
 export const MAX_CHAT_FILE_BYTES = 50 * 1024 * 1024;
 

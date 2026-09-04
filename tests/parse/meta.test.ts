@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { parseMetaChat } from "./parse-meta";
+import { parseMetaChat } from "@/lib/parse";
 
 const RAW_META_GIF_SHARE = `{
   "participants": [

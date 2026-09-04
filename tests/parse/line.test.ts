@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { parseLineChat } from "./parse-line";
+import { parseLineChat } from "@/lib/parse";
 
 function lineExport(time: string, date = "2024/11/8（週五）") {
   return [
