@@ -166,7 +166,7 @@ export const messages = {
       "目前只有支援兩人的對話，多人的有在想該怎麼做，但我實在有點懶，可能哪天心血來潮就會來做。",
     guideOfficialHelp: "LINE 官方說明",
     guideOfficialHelpMeta: "Meta 官方說明",
-    guideGoImport: "回到首頁匯入",
+    guideGoImport: "回到首頁",
   },
   en: {
     tagline: "Chat visualization",
@@ -338,7 +338,7 @@ export const messages = {
       "Right now we only support 1-on-1 chats. I’ve been thinking about group chats, but I’m a bit lazy—maybe I’ll do it on a whim one day.",
     guideOfficialHelp: "LINE Help Center",
     guideOfficialHelpMeta: "Meta Help Center",
-    guideGoImport: "Back to import",
+    guideGoImport: "Back to home",
   },
 } as const;
 
