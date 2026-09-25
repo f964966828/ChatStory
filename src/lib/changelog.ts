@@ -8,6 +8,19 @@ export const CHANGELOG_PAGE_SIZE = 5;
 
 export const CHANGELOG: ChangelogEntry[] = [
   {
+    date: "2026/09/25",
+    zh: [
+      "新增 Telegram JSON 聊天紀錄匯入與解析支援。",
+      "新增 Telegram 匯入指引。",
+      "移除聊天紀錄匯入的檔案大小限制。",
+    ],
+    en: [
+      "Added support for importing and parsing Telegram JSON chat exports.",
+      "Added a Telegram import guide.",
+      "Removed the file size limit for chat imports.",
+    ],
+  },
+  {
     date: "2026/09/04",
     zh: [
       "修正 LINE 文字檔案解析錯誤問題。",
