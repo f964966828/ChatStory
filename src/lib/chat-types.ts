@@ -1,4 +1,10 @@
-export type ImportPlatform = "line" | "meta";
+export type ImportPlatform = "line" | "meta" | "telegram";
+
+export const IMPORT_PLATFORM_LABELS: Record<ImportPlatform, string> = {
+  line: "LINE",
+  meta: "Meta",
+  telegram: "Telegram",
+};
 
 export type MessageType =
   | "text"

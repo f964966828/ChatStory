@@ -1,7 +1,7 @@
 import { GuideScreen } from "@/components/GuideScreen";
 import { notFound } from "next/navigation";
 
-const PLATFORMS = ["line", "meta", "messenger", "instagram", "threads"] as const;
+const PLATFORMS = ["line", "meta", "messenger", "instagram", "threads", "telegram"] as const;
 
 type Platform = (typeof PLATFORMS)[number];
 

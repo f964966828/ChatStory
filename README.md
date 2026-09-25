@@ -12,7 +12,7 @@ Turn your chats into stories you can explore.
 
 </div>
 
-Currently supported: **LINE**, plus **Meta** (Messenger, Instagram, and Threads). More platforms may come later.
+Currently supported: **LINE**, **Telegram**, plus **Meta** (Messenger, Instagram, and Threads). More platforms may come later.
 
 <div align="center">
   <img src="docs/preview.png" alt="ChatStory dashboard" />
@@ -38,7 +38,7 @@ Data flows in four stages: **file checks → platform parser → local analysis 
 | Routes | `src/app/` | Home, changelog, import guides |
 | Shell | `src/components/` | Landing, dashboard layout, chat panel, i18n |
 | Charts | `src/components/dashboard/` | One file per visualization, plus share-image export |
-| Domain | `src/lib/` | Import, LINE/Meta parsers, stats, word tokenization |
+| Domain | `src/lib/` | Import, LINE/Meta/Telegram parsers, stats, word tokenization |
 | Tests | `tests/` | Parser unit tests, kept out of `src/lib/` |
 
 ```
@@ -51,11 +51,11 @@ src/
 │   └── dashboard/        # Charts
 └── lib/
     ├── import-chat.ts    # Type / size checks
-    ├── parse/            # LINE .txt and Meta .json
+    ├── parse/            # LINE .txt, Meta .json, and Telegram Desktop .json
     ├── analyze.ts        # Stats
     └── words.ts          # Word clouds
 tests/
-└── parse/                # LINE and Meta parser tests
+└── parse/                # LINE, Meta, and Telegram parser tests
 ```
 
 ## Deploy locally

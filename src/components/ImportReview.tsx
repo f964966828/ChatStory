@@ -2,7 +2,7 @@
 
 import { useLocale } from "@/components/LocaleProvider";
 import { formatNumber } from "@/lib/analyze";
-import type { ImportPlatform, ParsedChat } from "@/lib/chat-types";
+import { IMPORT_PLATFORM_LABELS, type ImportPlatform, type ParsedChat } from "@/lib/chat-types";
 
 export type PendingImport = {
   parsed: ParsedChat;
@@ -27,7 +27,7 @@ export function ImportReview({
     { label: t("importReviewFile"), value: fileName },
     {
       label: t("importReviewPlatform"),
-      value: platform === "line" ? "LINE" : "Meta",
+      value: IMPORT_PLATFORM_LABELS[platform],
     },
     {
       label: t("importReviewPeople"),

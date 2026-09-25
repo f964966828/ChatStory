@@ -28,7 +28,6 @@ export const messages = {
     importReviewAnother: "選別的檔案",
     uploadErrorGeneric: "讀不到這個檔案，請確認格式是否符合目前選擇的平台。",
     uploadErrorParse: "解析失敗，請確認聊天紀錄的格式是否正確。",
-    uploadErrorLarge: "檔案太大，請選擇 50MB 以內的檔案。",
     uploadErrorEmpty: "這個檔案裡沒有可分析的聊天訊息。",
     uploadErrorTwoUsers: "這個檔案不是兩人對話，目前只支援兩人聊天室。",
     uploadErrorType: "檔案類型不對。目前選擇 {name}，請匯入 {ext} 檔案。",
@@ -37,6 +36,7 @@ export const messages = {
     importGuideBody: "選擇平台，查看如何從 App 匯出聊天紀錄。",
     importHintLine: "怎麼從 LINE 匯出聊天紀錄？",
     importHintMeta: "怎麼從 Meta（Messenger、Instagram、Threads）匯出聊天紀錄？",
+    importHintTelegram: "怎麼從 Telegram 匯出聊天紀錄？",
     importHintMessenger: "怎麼從 Messenger 匯出聊天紀錄？",
     importHintInstagram: "怎麼從 Instagram 匯出聊天紀錄？",
     viewSteps: "查看步驟 →",
@@ -64,6 +64,7 @@ export const messages = {
     guideMeta: "Meta 匯入指引",
     guideMessenger: "Messenger 匯入指引",
     guideInstagram: "Instagram 匯入指引",
+    guideTelegram: "Telegram 匯入指引",
     dashboardTitle: "與 {name} 的聊天",
     dashboardAnonymous: "匿名",
     dashboardShare: "分享",
@@ -142,7 +143,7 @@ export const messages = {
     chartWordCloud: "文字雲",
     chartWordCloudNamed: "文字雲 - {name}",
     chartWordCloudEmpty: "訊息裡還沒有足夠的詞可以成雲",
-    chartWordCloudLoad: "點擊加載文字雲",
+    chartWordCloudLoad: "點擊載入文字雲",
     chartWordCloudLoading: "正在分析常用詞…",
     wordTooltip: "{word} · {count}",
     chartWordCloudReset: "重設",
@@ -156,7 +157,7 @@ export const messages = {
     faqTitle: "常見問題",
     faqExportQ: "為什麼要先匯出檔案再丟上來？",
     faqExportA:
-      "LINE、Messenger、Instagram、Threads 都不開放第三方直接讀取聊天內容，只能用官方提供的匯出。所以請你先在 App 裡匯出紀錄，再把檔案放到這個網頁，我們才能在你的瀏覽器裡分析。",
+      "LINE、Messenger、Instagram、Threads、Telegram 都不開放第三方直接讀取聊天內容，只能用官方提供的匯出。所以請你先從各平台匯出紀錄，再把檔案放到這個網頁，我們才能在你的瀏覽器裡分析。",
     faqSecurityQ: "上傳訊息到這邊不會有資安疑慮嗎？",
     faqSecurityA:
       "這個網站不會把聊天紀錄上傳，解析資料跟畫圖都在你的裝置上完成，實在有疑慮也可以參考 ",
@@ -166,6 +167,7 @@ export const messages = {
       "目前只有支援兩人的對話，多人的有在想該怎麼做，但我實在有點懶，可能哪天心血來潮就會來做。",
     guideOfficialHelp: "LINE 官方說明",
     guideOfficialHelpMeta: "Meta 官方說明",
+    guideOfficialHelpTelegram: "Telegram 官方說明",
     guideGoImport: "回到首頁",
   },
   en: {
@@ -197,7 +199,6 @@ export const messages = {
       "Couldn't read this file. Check that it matches the selected platform.",
     uploadErrorParse:
       "Parsing failed. Check that the chat history format is valid.",
-    uploadErrorLarge: "The file is too large. Please choose one under 50MB.",
     uploadErrorEmpty: "This file doesn't contain chat messages we can analyze.",
     uploadErrorTwoUsers:
       "This file isn’t a 1-on-1 chat. We only support two people right now.",
@@ -208,6 +209,7 @@ export const messages = {
     importGuideBody: "Choose a platform to see how to export your chat history.",
     importHintLine: "How to export chats from LINE?",
     importHintMeta: "How to export chats from Meta (Messenger, Instagram, Threads)?",
+    importHintTelegram: "How to export chats from Telegram?",
     importHintMessenger: "How to export chats from Messenger?",
     importHintInstagram: "How to export chats from Instagram?",
     viewSteps: "View steps →",
@@ -235,6 +237,7 @@ export const messages = {
     guideMeta: "Meta import guide",
     guideMessenger: "Messenger import guide",
     guideInstagram: "Instagram import guide",
+    guideTelegram: "Telegram import guide",
     dashboardTitle: "Chat with {name}",
     dashboardAnonymous: "Anon.",
     dashboardShare: "Share",
@@ -328,7 +331,7 @@ export const messages = {
     faqTitle: "FAQ",
     faqExportQ: "Why do I have to export a file first?",
     faqExportA:
-      "LINE, Messenger, Instagram, and Threads don’t let third-party apps read chats directly—you can only use their official export. Export the history in the app, then drop the file on this page so we can analyze it in your browser.",
+      "LINE, Messenger, Instagram, Threads, and Telegram don’t let this site read chats directly—you must use an official export. Export the history, then drop the file on this page so we can analyze it in your browser.",
     faqSecurityQ: "Is it safe to upload my messages here?",
     faqSecurityA:
       "This site does not upload your chat history. Parsing and charts all run on your device. If you still have concerns, you can also check the ",
@@ -338,6 +341,7 @@ export const messages = {
       "Right now we only support 1-on-1 chats. I’ve been thinking about group chats, but I’m a bit lazy—maybe I’ll do it on a whim one day.",
     guideOfficialHelp: "LINE Help Center",
     guideOfficialHelpMeta: "Meta Help Center",
+    guideOfficialHelpTelegram: "Telegram Help Center",
     guideGoImport: "Back to home",
   },
 } as const;

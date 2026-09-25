@@ -1,8 +1,6 @@
 import type { ImportPlatform, ParsedChat } from "@/lib/chat-types";
 import { parseChatText } from "@/lib/parse";
 
-export const MAX_CHAT_FILE_BYTES = 50 * 1024 * 1024;
-
 export function acceptForPlatform(platform: ImportPlatform) {
   if (platform === "line") return ".txt,text/plain";
   return ".json,application/json";
@@ -34,10 +32,6 @@ export async function importChatFile(
 ): Promise<ParsedChat> {
   if (!isAllowedFileType(file, platform)) {
     throw new Error("WRONG_FILE_TYPE");
-  }
-
-  if (file.size > MAX_CHAT_FILE_BYTES) {
-    throw new Error("FILE_TOO_LARGE");
   }
 
   const buffer = await file.arrayBuffer();

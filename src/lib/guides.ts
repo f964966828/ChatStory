@@ -186,3 +186,68 @@ export const META_GUIDE: Record<Locale, MetaGuideCopy> = {
     officialHref: "https://www.facebook.com/help/212802592074644",
   },
 };
+
+export type TelegramGuideCopy = {
+  needTitle: string;
+  needItems: string[];
+  desktopTitle: string;
+  desktopSteps: string[];
+  formatTitle: string;
+  formatItems: string[];
+  noteTitle: string;
+  noteItems: string[];
+  officialHref: string;
+};
+
+export const TELEGRAM_GUIDE: Record<Locale, TelegramGuideCopy> = {
+  zh: {
+    needTitle: "開始前",
+    needItems: [
+      "目前只支援兩人聊天室，群組和頻道還不能分析。",
+      "檔案會留在你的裝置上解析，不會上傳到伺服器。",
+      "請使用 Telegram Desktop 匯出的 JSON；HTML 檔案目前不能用。",
+    ],
+    desktopTitle: "使用 Telegram Desktop 匯出",
+    desktopSteps: [
+      "打開要分析的兩人聊天室。",
+      "點聊天室右上角的 ⋮，選擇「Export chat history／匯出聊天記錄」。",
+      "在匯出設定中選擇 Machine-readable JSON。",
+      "開始匯出，完成後把 JSON 檔拖進 ChatStory 首頁。",
+    ],
+    formatTitle: "匯出設定",
+    formatItems: [
+      "只需要 JSON；不需要下載照片、影片或其他媒體。",
+    ],
+    noteTitle: "注意",
+    noteItems: [
+      "Telegram 聊天匯出功能需要使用 Desktop 版，手機 App 與 Web 版不能匯出。",
+      "目前只分析兩人聊天室；群組與頻道會被拒絕。",
+    ],
+    officialHref: "https://bugs.telegram.org/c/60/6",
+  },
+  en: {
+    needTitle: "Before you start",
+    needItems: [
+      "Only 1-on-1 chats are supported. Groups and channels can’t be analyzed yet.",
+      "The file is parsed on your device and is not uploaded to a server.",
+      "Use JSON exported from Telegram Desktop. HTML exports are not supported.",
+    ],
+    desktopTitle: "Export from Telegram Desktop",
+    desktopSteps: [
+      "Open the 1-on-1 chat you want to analyze.",
+      "Click the ⋮ menu in the chat and choose Export chat history.",
+      "Choose Machine-readable JSON in the export settings.",
+      "Start the export, then drop the JSON file on the ChatStory home page.",
+    ],
+    formatTitle: "Export settings",
+    formatItems: [
+      "Only JSON is needed; you do not need to download photos, videos, or other media.",
+    ],
+    noteTitle: "Notice",
+    noteItems: [
+      "Telegram chat export requires the Desktop application; the mobile and web apps cannot export chats.",
+      "Only 1-on-1 chats are analyzed. Groups and channels will be rejected.",
+    ],
+    officialHref: "https://bugs.telegram.org/c/60/6",
+  },
+};

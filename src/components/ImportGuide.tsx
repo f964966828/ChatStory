@@ -4,6 +4,7 @@ import {
   InstagramLogo,
   LineLogo,
   MessengerLogo,
+  TelegramLogo,
   ThreadsLogo,
 } from "@/components/PlatformLogos";
 import { useLocale } from "@/components/LocaleProvider";
@@ -29,6 +30,12 @@ const GUIDES: {
     name: "Meta",
     hintKey: "importHintMeta",
     logos: [MessengerLogo, InstagramLogo, ThreadsLogo],
+  },
+  {
+    href: "/guides/telegram",
+    name: "Telegram",
+    hintKey: "importHintTelegram",
+    logos: [TelegramLogo],
   },
 ];
 

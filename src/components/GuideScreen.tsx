@@ -7,11 +7,12 @@ import {
   InstagramLogo,
   LineLogo,
   MessengerLogo,
+  TelegramLogo,
   ThreadsLogo,
 } from "@/components/PlatformLogos";
 import { useLocale } from "@/components/LocaleProvider";
 import { SiteFooter } from "@/components/SiteFooter";
-import { LINE_GUIDE, META_GUIDE } from "@/lib/guides";
+import { LINE_GUIDE, META_GUIDE, TELEGRAM_GUIDE } from "@/lib/guides";
 import { toPinyinSlug } from "@/lib/pinyin";
 import Link from "next/link";
 
@@ -21,6 +22,7 @@ const GUIDE_TITLES = {
   messenger: "guideMeta",
   instagram: "guideMeta",
   threads: "guideMeta",
+  telegram: "guideTelegram",
 } as const;
 
 type GuideScreenProps = {
@@ -55,7 +57,13 @@ export function GuideScreen({ platform }: GuideScreenProps) {
       </header>
 
       <main className="mx-auto w-full max-w-3xl flex-1 px-4 py-8 sm:px-6 sm:py-10">
-        {platform === "line" ? <LineGuide /> : <MetaGuide />}
+        {platform === "line" ? (
+          <LineGuide />
+        ) : platform === "telegram" ? (
+          <TelegramGuide />
+        ) : (
+          <MetaGuide />
+        )}
       </main>
       <SiteFooter />
     </div>
@@ -125,6 +133,83 @@ function LineGuide() {
           className="inline-flex items-center justify-center rounded-full border border-card-border bg-white px-5 py-2.5 text-sm font-medium text-accent-deep transition hover:border-accent hover:bg-accent/10"
         >
           {t("guideOfficialHelp")}
+        </a>
+      </div>
+    </article>
+  );
+}
+
+function TelegramGuide() {
+  const { t, locale } = useLocale();
+  const copy = TELEGRAM_GUIDE[locale];
+
+  return (
+    <article>
+      <div className="flex items-center gap-3">
+        <TelegramLogo size={40} />
+        <h1 className="font-serif text-2xl font-bold text-accent-deep sm:text-3xl">
+          {t("guideTelegram")}
+        </h1>
+      </div>
+
+      <section className="mt-8 rounded-2xl border border-card-border bg-card px-4 py-4 sm:px-5 sm:py-5">
+        <h2 className="text-base font-bold text-accent-deep">{copy.needTitle}</h2>
+        <ul className="mt-3 list-disc space-y-1.5 pl-5 text-sm leading-6 text-foreground">
+          {copy.needItems.map((item) => (
+            <li key={item}>{item}</li>
+          ))}
+        </ul>
+      </section>
+
+      <section className="mt-4 rounded-2xl border border-card-border bg-card px-4 py-4 sm:px-5 sm:py-5">
+        <h2 className="text-base font-bold text-accent-deep">{copy.desktopTitle}</h2>
+        <ol className="mt-4 space-y-3">
+          {copy.desktopSteps.map((step, index) => (
+            <li key={step} className="flex gap-3 text-sm leading-6">
+              <span className="mt-0.5 flex size-6 shrink-0 items-center justify-center rounded-full bg-accent/15 text-xs font-bold text-accent-deep">
+                {index + 1}
+              </span>
+              <span>{step}</span>
+            </li>
+          ))}
+        </ol>
+      </section>
+
+      <section className="mt-4 rounded-2xl border border-card-border bg-card px-4 py-4 sm:px-5 sm:py-5">
+        <h2 className="text-base font-bold text-accent-deep">{copy.formatTitle}</h2>
+        <ul className="mt-3 list-disc space-y-1.5 pl-5 text-sm leading-6 text-foreground">
+          {copy.formatItems.map((item) => (
+            <li key={item}>{item}</li>
+          ))}
+        </ul>
+      </section>
+
+      <section className="mt-4 rounded-2xl border border-card-border bg-card px-4 py-4 sm:px-5 sm:py-5">
+        <h2 className="flex items-center gap-2 text-base font-bold text-accent-deep">
+          <NoticeIcon label={locale === "en" ? "Notice" : "注意"} />
+          {copy.noteTitle}
+        </h2>
+        <ul className="mt-3 list-disc space-y-1.5 pl-5 text-sm leading-6 text-foreground">
+          {copy.noteItems.map((item) => (
+            <li key={item}>{item}</li>
+          ))}
+        </ul>
+      </section>
+
+      <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:items-center">
+        <Link
+          href="/#import"
+          className="inline-flex items-center justify-center rounded-full bg-accent px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-accent-dim"
+        >
+          {t("guideGoImport")}
+        </Link>
+        <a
+          href={copy.officialHref}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-flex items-center justify-center rounded-full border border-card-border bg-white px-5 py-2.5 text-sm font-medium text-accent-deep transition hover:border-accent hover:bg-accent/10"
+        >
+          {t("guideOfficialHelpTelegram")}
         </a>
       </div>
     </article>

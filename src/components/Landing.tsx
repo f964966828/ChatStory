@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { ImportGuide } from "@/components/ImportGuide";
 import type { PendingImport } from "@/components/ImportReview";
 import { useLocale } from "@/components/LocaleProvider";
-import type { ImportPlatform } from "@/lib/chat-types";
+import { IMPORT_PLATFORM_LABELS, type ImportPlatform } from "@/lib/chat-types";
 import { acceptForPlatform, importChatFile, isAllowedFileType } from "@/lib/import-chat";
 import type { MessageKey } from "@/lib/messages";
 import { SITE_LINKS } from "@/lib/site-links";
@@ -50,7 +50,7 @@ export function Landing({ onPreviewDashboard, onParsed }: LandingProps) {
   ] as const;
 
   const fileHint = {
-    name: platform === "line" ? "LINE" : "Meta",
+    name: IMPORT_PLATFORM_LABELS[platform],
     ext: platform === "line" ? "txt" : "json",
   };
   const errorText =
@@ -74,8 +74,7 @@ export function Landing({ onPreviewDashboard, onParsed }: LandingProps) {
       onParsed({ parsed, fileName: file.name, platform });
     } catch (caught) {
       const code = caught instanceof Error ? caught.message : "";
-      if (code === "FILE_TOO_LARGE") setError("uploadErrorLarge");
-      else if (code === "EMPTY_CHAT") setError("uploadErrorEmpty");
+      if (code === "EMPTY_CHAT") setError("uploadErrorEmpty");
       else if (code === "WRONG_FILE_TYPE") setError("uploadErrorType");
       else if (code === "NOT_TWO_USERS") setError("uploadErrorTwoUsers");
       else if (code === "PARSE_FAILED") setError("uploadErrorParse");
@@ -197,6 +196,7 @@ export function Landing({ onPreviewDashboard, onParsed }: LandingProps) {
 const IMPORT_PLATFORMS: { id: ImportPlatform; label: string }[] = [
   { id: "line", label: "LINE" },
   { id: "meta", label: "Meta" },
+  { id: "telegram", label: "Telegram" },
 ];
 
 function Dropzone({

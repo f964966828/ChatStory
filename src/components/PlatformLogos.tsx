@@ -1,5 +1,5 @@
 import { useId } from "react";
-import { siInstagram, siLine, siMessenger, siThreads } from "simple-icons";
+import { siInstagram, siLine, siMessenger, siTelegram, siThreads } from "simple-icons";
 
 type LogoProps = {
   size?: number;
@@ -81,6 +81,20 @@ export function ThreadsLogo({ size = 40 }: LogoProps) {
       className="shrink-0"
     >
       <path d={siThreads.path} fill={`#${siThreads.hex}`} />
+    </svg>
+  );
+}
+
+export function TelegramLogo({ size = 40 }: LogoProps) {
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      aria-hidden
+      className="shrink-0"
+    >
+      <path d={siTelegram.path} fill={`#${siTelegram.hex}`} />
     </svg>
   );
 }
